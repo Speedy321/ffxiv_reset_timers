@@ -89,7 +89,6 @@ $('#weekly-card').countdown(newWeek.toJSDate())
 
     // If in the last 24h
     const hoursUntilReset = newWeek.diff(timeNow(), "hours").hours;
-    console.log(newWeek.diff(timeNow(), "hours"));
     if (hoursUntilReset < 24){
         $('#weekly-card').removeClass('border-secondary');
         $('#weekly-card').addClass('border-warning');
@@ -165,10 +164,10 @@ $('#fishing-card').countdown(nextFishingBoat.toJSDate())
     $('#fishing-timer').html(event.strftime('%H:%M:%S'))
 
     // If we're not in the first 15 mins
-    if (   ((timeNow().hour < nextFishingBoat.hour) && (timeNow().minute > 15))
-        || (timeNow().hour == nextFishingBoat.minus({hour: 1}).hour)){
-            $('#fishing-card').removeClass('border-success');
-            $('#fishing-card').addClass('border-secondary');
+    const minsToNextBoat = nextFishingBoat.diff(timeNow(), "minutes").minutes;
+    if (minsToNextBoat < 105){
+        $('#fishing-card').removeClass('border-success');
+        $('#fishing-card').addClass('border-secondary');
     }
 })
 .on('finish.countdown', function(event) {
