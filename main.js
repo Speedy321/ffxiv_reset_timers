@@ -1,27 +1,29 @@
 var DateTime = luxon.DateTime;
 
-var newDay = timeNow().startOf('day').plus({ days: 1 });
+var newDay = timeNowJP().startOf('day').plus({days: 1}).toUTC();
 var newWeek = getNextWeekDate();
 var fashionStart = getNextWeekDate().minus({days: 4});
-var nextFishingBoat = getNextFishingBoat()
-var jumboCactbot = getNextCactbot()
+var nextFishingBoat = getNextFishingBoat();
+var jumboCactbot = getNextCactbot();
 
-var time = DateTime.now().plus({seconds: 10}).toJSDate();
-
-function timeNow() {
+function timeNowJP() {
     return DateTime.fromObject({zone: 'Asia/Tokyo'});
 }
 
+function timeNow() {
+    return timeNowJP().toUTC();
+}
+
 function getNextFishingBoat() {
-    var date = timeNow().startOf('hour');
+    var date = timeNowJP().startOf('hour');
     if (date.hour % 2 == 0)
-        return date.plus({hours: 1});
+        return date.plus({hours: 1}).toUTC();
     else
-        return date.plus({hours: 2});
+        return date.plus({hours: 2}).toUTC();
 }
 
 function getNextCactbot() {
-    var date = timeNow().startOf('hour');
+    var date = timeNowJP().startOf('hour');
 
     // We're past 'Sun 11:00' jp time but not finished the week yet.
     if (date.weekday > 7 || ((date.weekday = 7 && date.hour >= 11))){ 
@@ -29,11 +31,11 @@ function getNextCactbot() {
     }
 
     // Reset is at 11:00 jp time on Tue.
-    return date.set({hour: 11, weekday: 7});
+    return date.set({hour: 11, weekday: 7}).toUTC();
 }
 
 function getNextWeekDate() {
-    var date = timeNow().startOf('hour');
+    var date = timeNowJP().startOf('hour');
 
     // We're past 'Tue 17:00' jp time but not finished the week yet.
     if (date.weekday > 2 || ((date.weekday = 2 && date.hour >= 17))){ 
@@ -41,11 +43,11 @@ function getNextWeekDate() {
     }
 
     // Reset is at 17:00 jp time on Tue.
-    return date.set({hour: 17, weekday: 2});
+    return date.set({hour: 17, weekday: 2}).toUTC();
 }
 
 function isFashionOpen() {
-    var now = timeNow();
+    var now = timeNowJP();
     if ((now >= fashionStart) && (now < newWeek))
         return true;
     else 
@@ -53,7 +55,7 @@ function isFashionOpen() {
 }
 
 function isCactbotEarly() {
-    var now = timeNow();
+    var now = timeNowJP();
     if ((now >= now.set({weekday: 7, hour: 11})) && (now < now.set({weekday: 7, hour: 12})))
         return true;
     else 
@@ -65,35 +67,38 @@ $('#daily-card').countdown(newDay.toJSDate())
     $('#daily-timer').html(event.strftime('%H:%M:%S'));
 
     // If in the last hour
-    if (timeNow().hour == newDay.hour){
+    if (timeNow().hour == newDay.minus({hour: 1}).hour){
         $('#daily-card').removeClass('border-secondary');
         $('#daily-card').addClass('border-danger');
     }
 
 })
 .on('finish.countdown', function(event) {
-    newDay = timeNow().startOf('day').plus({ days: 1 });
+    newDay = timeNowJP().startOf('day').plus({ days: 1 }).toUTC();
+
     $('#daily-card').countdown(newDay.toJSDate());
     $('#daily-card').countdown('start');
 
     $('#daily-card').removeClass('border-danger');
-    $('#daily-card').addClass('border-success');
+    $('#daily-card').addClass('border-secondary');
 });
 
 $('#weekly-card').countdown(newWeek.toJSDate())
 .on('update.countdown', function(event) {
     $('#weekly-timer').html(event.strftime('%-D days, %H:%M:%S'));
 
-    // If in the last day
-    if (timeNow().day == newWeek.day){
+    // If in the last 24h
+    const hoursUntilReset = newWeek.diff(timeNow(), "hours").hours;
+    console.log(newWeek.diff(timeNow(), "hours"));
+    if (hoursUntilReset < 24){
         $('#weekly-card').removeClass('border-secondary');
         $('#weekly-card').addClass('border-warning');
-    }
-
-    // If in the last hour
-    if (timeNow().hour == newDay.hour){
-        $('#weekly-card').removeClass('border-warning');
-        $('#weekly-card').addClass('border-danger');
+        
+        // If in the last hour
+        if (timeNow().hour == newWeek.minus({hour: 1}).hour){
+            $('#weekly-card').removeClass('border-warning');
+            $('#weekly-card').addClass('border-danger');
+        }
     }
 })
 .on('finish.countdown', function(event) {
@@ -109,10 +114,11 @@ $('#cactbot-card').countdown(jumboCactbot.toJSDate())
 .on('update.countdown', function(event) {
     $('#cactbot-timer').html(event.strftime('%-D days, %H:%M:%S'))
 
-    // If in the last day
-    if (timeNow().day == jumboCactbot.day){
+    // If in the last 24h
+    const hoursUntilReset = jumboCactbot.diff(timeNow(), "hours").hours;
+    if (hoursUntilReset < 24){
         $('#cactbot-card').removeClass('border-secondary');
-        $('#cactbot-card').addClass('border-info');
+        $('#cactbot-card').addClass('border-warning');
     }
 })
 .on('finish.countdown', function(event) {
@@ -120,29 +126,37 @@ $('#cactbot-card').countdown(jumboCactbot.toJSDate())
     $('#cactbot-card').countdown(jumboCactbot.toJSDate());
     $('#cactbot-card').countdown('start');
     
-    $('#cactbot-card').removeClass('border-info');
+    $('#cactbot-card').removeClass('border-warning');
     $('#cactbot-card').addClass('border-secondary');
 });
 
-$('#cactbot-early').countdown(jumboCactbot.plus({hour: 1}).toJSDate())
-.on('update.countdown', function(event) {
-   $('#cactbot-early-timer').html(event.strftime('%M:%S'));
+var cactbotEarly = jumboCactbot.plus({day: -7, hour: 1});
+var hoursToNext = timeNow().diff(jumboCactbot, "hours").hours
 
-    // If in the last hour
-    if (timeNow().hour == newDay.hour){
+if (hoursToNext > 167)
+    cactbotEarly = jumboCactbot.plus({hour: 1});
+
+$('#cactbot-early').countdown(cactbotEarly.toJSDate())
+.on('update.countdown', function(event) {
+    $('#cactbot-early-timer').html(event.strftime('%M:%S'));
+    
+    // We're in the first hour of the cactbot
+    hoursToNext = jumboCactbot.diff(timeNow(), "hours").hours
+    if (hoursToNext > 167){
         $('#cactbot-card').removeClass('border-secondary');
-        $('#cactbot-card').addClass('border-success');
+        $('#cactbot-card').addClass('border-info');
 
         $('#cactbot-early').removeClass('d-none');
     }
 })
 .on('finish.countdown', function(event) {
-    $('#cactbot-early').countdown(jumboCactbot.plus({hour: 1}).toJSDate());
+    cactbotEarly = jumboCactbot.plus({hour: 1});
+    $('#cactbot-early').countdown(cactbotEarly.toJSDate());
     $('#cactbot-early').countdown('start');
 
     $('#cactbot-early').addClass('d-none');
     
-    $('#cactbot-card').removeClass('border-success');
+    $('#cactbot-card').removeClass('border-info');
     $('#cactbot-card').addClass('border-secondary');
 });
 
@@ -202,21 +216,21 @@ setFashionTimer();
 //event stuff
 var fanfest = new TimeableEvent(
     "Digital Fanfest", 
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 18}).startOf('hour'), 
+    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 18}).startOf('hour').toUTC(), 
     "Make sure you're up to date on the <a target='_blank' href='https://fanfest.finalfantasyxiv.com/2021/na/'>official website</a>.",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 16, hour: 4}).startOf('hour')
+    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 16, hour: 4}).startOf('hour').toUTC()
 );
 
 var ffestmoggle = new TimeableEvent(
     "Moggle Treasure Festival",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 1}).startOf('hour'),
+    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 1}).startOf('hour').toUTC(),
     "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202105/dubrw051tv'>Lodestone page</a>.",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 6, day: 14, hour: 7, minute: 59}).startOf('minute')
+    DateTime.fromObject({zone: 'America/Vancouver', month: 6, day: 14, hour: 7, minute: 59}).startOf('minute').toUTC()
 );
 
 var uznairphoto = new TimeableEvent(
     "Uznair Challenge",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 1}).startOf('hour'),
+    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 1}).startOf('hour').toUTC(),
     "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/topics/detail/3dfc23b4ecdae8971145dfb67df9c3ca7a09920d'>Lodestone page</a>.",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 21, hour: 7, minute: 59}).startOf('minute')
+    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 21, hour: 7, minute: 59}).startOf('minute').toUTC()
 );
