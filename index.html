@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FFXIV Reset Timers</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://bootswatch.com/5/cyborg/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div>
+        <h1 class="col-12 text-success">FFXIV Reset Timers</h1>
+
+        <div id="timer-list">
+            <h5 class="section-title border-bottom">Regular Timers</h5>
+            <div id="daily-card" class="card border-secondary">
+                <button class="btn card-header" data-toggle="collapse" data-target="#collapseDaily" aria-expanded="true" aria-controls="collapseDaily">
+                    <div id="headingDaily" class="row">
+                        <h4 class="col">Daily reset in:</h4>
+                        <h4 id="daily-timer" class="col text-primary font-weight-bold"></h4>     
+                    </div>
+                </button>
+
+                <div id="collapseDaily" class="collapse hide" aria-labelledby="headingDaily" data-parent="#accordion">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Beast Tribe quests, Duty Roulettes, Levequests, Grand Company Hand-ins, Squadron Training
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="weekly-card" class="card border-secondary">
+                <button class="btn card-header" data-toggle="collapse" data-target="#collapseWeeklyCombat" aria-expanded="true" aria-controls="collapseWeeklyCombat">
+                    <div id="headingWeeklyCombat" class="row">
+                        <h4 class="col">Weekly reset in:</h4>
+                        <h4 id="weekly-timer" class="col text-primary font-weight-bold"></h4>
+                    </div>
+                </button>
+
+                <div id="collapseWeeklyCombat" class="collapse hide" aria-labelledby="headingWeeklyCombat" data-parent="#accordion">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Raid loot lock, Tomestone caps, Challenge Log, Woundrous Tails, Custom Deliveries, Elite Hunt Mark, Doman Enclave Donations
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="fishing-card" class="card border-success">
+                <button class="btn card-header" data-toggle="collapse" data-target="#collapseFishing" aria-expanded="true" aria-controls="collapseFishing">
+                    <div id="headingFishing" div class="row">
+                        <h4 class="col">Next Ocean Fishing boat leaves in:</h4>
+                        <h4 id="fishing-timer" class="col text-primary font-weight-bold"></h4>
+                    </div>
+                </button>
+
+                <div id="collapseFishing" class="collapse hide" aria-labelledby="headingFishing" data-parent="#accordion">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Use <a target="_blank" href="https://ffxiv.pf-n.co/ocean-fishing">Lulu's amazing tracker</a> for bait and itineraries.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fashion-card" class="card border-secondary">
+                <button class="btn card-header" data-toggle="collapse" data-target="#collapseFashion" aria-expanded="true" aria-controls="collapseFashion">
+                    <div id="headingFashion" class="row">
+                        <h4 id="fashion-txt" class="col">Fashion Report will open in:</h4>
+                        <h4 id="fashion-timer" class="text-primary col font-weight-bold"></h4>
+                    </div>
+                </button>
+
+                <div id="collapseFashion" class="collapse hide" aria-labelledby="headingFashion" data-parent="#accordion">
+                    <div class="card-body">
+                        <p id="label-opened" class="card-text">
+                            Judging is open, will close at the end of the timer. <br />Check
+                            <a target="_blank" href="https://www.reddit.com/search/?q=fashion%20report">reddit</a>
+                            for what to wear.
+                        </p>
+                        <p id="label-closed" class="card-text d-none">
+                            Judging is closed, will open at the end of the timer.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cactbot-card" class="card border-secondary">
+                <button class="btn card-header" data-toggle="collapse" data-target="#collapseCactbot" aria-expanded="true" aria-controls="collapseCactbot">
+                    <div id="headingCactbot">
+                        <div class="row">
+                            <h4 class="col">Jumbo Cactbot gets drawn in:</h4>
+                            <h4 id="cactbot-timer" class="col text-primary font-weight-bold"></h4>
+                        </div>
+                        <div id="cactbot-early" class="row d-none">
+                            <h5 class="col text-info font-italic">Jumbo Cactbot has just been drawn!</h5>
+                            <h5 class="col text-info">Early Bird ends in:</h5>
+                            <h5 id="cactbot-early-timer" class="col text-warning font-weight-bold"></h5>
+                        </div> 
+                    </div>
+                </button>
+
+                <div id="collapseCactbot" class="collapse hide" aria-labelledby="headingCactbot" data-parent="#accordion">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Claim this week's Jumbo Cactbot until next draw.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="section-title border-bottom">Event Timers&sup1;</h5>
+            
+        </div>
+        <div>
+            <p class="section-text text-secondary border-top border-secondary">
+                &sup1;: While the timers will be right for the events shown, events are mostly updated by hand so there might be delays before an event gets added to the list.
+            </p>
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.js"
+    integrity="sha512-aWlTsIGUhEq2+LQNA7Wq+OsLaouCcGGaHBWzoU9duKy26ImHe12gRtQnj4688p7QUHG+J4CMb+XwgZ8LYqQ+kQ=="
+    crossorigin="anonymous"></script>
+<script src="https://cdn.polyfill.io/v3/polyfill.js?features=default,String.prototype.repeat,Array.prototype.find,Array.prototype.findIndex,Math.trunc,Math.sign,Object.is"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js" 
+    integrity="sha256-4sbTzmCCW9LGrIh5OsN8V5Pfdad1F1MwhLAOyXKnsE0=" 
+    crossorigin="anonymous"></script>
+<script src="event.js"></script>
+<script src="main.js"></script>
+
+</html>
