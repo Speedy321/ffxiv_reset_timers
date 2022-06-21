@@ -62,7 +62,7 @@ function getNextHousingDeadline() {
 function isHousingOpen() {
     var housingBegin = DateTime.fromISO("2022-06-13T23:59:00.000", {zone: 'Asia/Tokyo'});
     var timeSinceBegin = timeNowJP().diff(housingBegin, "days");
-    
+
     if ((timeSinceBegin.days % 9) < 5) // 5 days open, the last 4 closed.
         return true;
     else
@@ -283,9 +283,15 @@ var ffestmoggle = new TimeableEvent(
     DateTime.fromObject({zone: 'America/Vancouver', month: 6, day: 14, hour: 7, minute: 59}).startOf('minute').toUTC()
 );
 
-var uznairphoto = new TimeableEvent(
-    "Uznair Challenge",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 1}).startOf('hour').toUTC(),
-    "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/topics/detail/3dfc23b4ecdae8971145dfb67df9c3ca7a09920d'>Lodestone page</a>.",
-    DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 21, hour: 7, minute: 59}).startOf('minute').toUTC()
-);
+var nextLL = new TimeableEvent(
+    "Live letter LXXI - patch 6.2 part 1",
+    DateTime.fromObject({zone: "America/Vancouver", month: 7, day: 1, hour: 4}).startOf('hour').toUTC(),
+    "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/topics/detail/64cdbeaaa0761db550e4a143b5a8cee363c3d490'>Lodestone page</a>."
+)
+
+var freeLogin = new TimeableEvent(
+    "Free Login Campaign - Play up to 96 hours!",
+    DateTime.fromObject({zone: "America/Vancouver", month: 6, day: 15, hour: 1}).startOf('hour').toUTC(),
+    "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/special/freelogincampaign/'>More informations</a>.",
+    DateTime.fromObject({zone: "America/Vancouver", month: 6, day: 30, hour: 7, minute: 59}).startOf('minute').toUTC()
+)
