@@ -5,7 +5,7 @@ function timeNow() {
 }
 
 class TimeableEvent {
-    constructor(eventName, startDate, htmlDesc, endDate=null){
+    constructor(eventID, eventName, startDate, htmlDesc, endDate=null){
         this.name = eventName.replace(/\s+/g, '-');
         this.startDate = startDate;
         this.endDate = endDate;
@@ -13,9 +13,9 @@ class TimeableEvent {
         this.txtRunning = eventName + " ends in:";
         this.desc = htmlDesc;
 
-        this.cardID = this.name + "-card";
-        this.timerID = this.name + "-timer";
-        this.txtID = this.name + "-txt";
+        this.cardID = eventID + "-card";
+        this.timerID = eventID + "-timer";
+        this.txtID = eventID + "-txt";
 
         this.makeDomRepr();
         $('#'+this.cardID).ready(this.addEventTimer(this));

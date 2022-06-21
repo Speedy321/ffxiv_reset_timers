@@ -270,6 +270,7 @@ setHousingTimer();
 
 //event stuff
 var fanfest = new TimeableEvent(
+    "fanfest",
     "Digital Fanfest", 
     DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 18}).startOf('hour').toUTC(), 
     "Make sure you're up to date on the <a target='_blank' href='https://fanfest.finalfantasyxiv.com/2021/na/'>official website</a>.",
@@ -277,6 +278,7 @@ var fanfest = new TimeableEvent(
 );
 
 var ffestmoggle = new TimeableEvent(
+    "moogletreasures",
     "Moggle Treasure Festival",
     DateTime.fromObject({zone: 'America/Vancouver', month: 5, day: 14, hour: 1}).startOf('hour').toUTC(),
     "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202105/dubrw051tv'>Lodestone page</a>.",
@@ -284,12 +286,14 @@ var ffestmoggle = new TimeableEvent(
 );
 
 var nextLL = new TimeableEvent(
+    "liveletter",
     "Live letter LXXI - patch 6.2 part 1",
     DateTime.fromObject({zone: "America/Vancouver", month: 7, day: 1, hour: 4}).startOf('hour').toUTC(),
     "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/topics/detail/64cdbeaaa0761db550e4a143b5a8cee363c3d490'>Lodestone page</a>."
 )
 
 var freeLogin = new TimeableEvent(
+    "freelog",
     "Free Login Campaign - Play up to 96 hours!",
     DateTime.fromObject({zone: "America/Vancouver", month: 6, day: 15, hour: 1}).startOf('hour').toUTC(),
     "<a target='_blank' href='https://na.finalfantasyxiv.com/lodestone/special/freelogincampaign/'>More informations</a>.",
