@@ -46,6 +46,29 @@ function getNextWeekDate() {
     return date.set({hour: 17, weekday: 2}).toUTC();
 }
 
+function getNextHousingDeadline() {
+    var housingBegin = DateTime.fromISO("2022-06-13T23:59:00.000", {zone: 'Asia/Tokyo'});
+    var timeSinceBegin = housingBegin.diffNow("days");
+
+    var daysUntilNextLoop = (Math.ceil((timeSinceBegin.days / 9)) * 9); // Get the next multiple of 9 days.
+    var nextLoopDate = housingBegin.plus({"days":daysUntilNextLoop});
+
+    if(isHousingOpen())
+        return nextLoopDate.minus({"days": 4}); // If housing is open, the next deadline is the closing after 5 days.
+    else
+        return nextLoopDate // Else it's the loop reset date.
+}
+
+function isHousingOpen() {
+    var housingBegin = DateTime.fromISO("2022-06-13T23:59:00.000", {zone: 'Asia/Tokyo'});
+
+    var timeSinceBegin = housingBegin.diffNow("days");
+    if ((timeSinceBegin.days % 9) < 5) // 5 days open, the last 4 closed.
+        return true;
+    else
+        return false;
+}
+
 function isFashionOpen() {
     var now = timeNowJP();
     if ((now >= fashionStart) && (now < newWeek))
@@ -211,6 +234,39 @@ function setFashionTimer() {
     }
 }
 setFashionTimer();
+
+function setHousingTimer() {
+    var nextHousingDeadline = getNextHousingDeadline()
+
+    if(isHousingOpen()){
+        $('#housing-card').removeClass('border-secondary');
+        $('#housing-card').addClass('border-success');
+
+        $('#housing-txt').html('Housing lottery is open. It will close in:')
+
+        $('#housing-card').countdown(nextHousingDeadline.toJSDate())
+        .on('update.countdown', function(event) {
+            $('#housing-timer').html(event.strftime('%-D days, %H:%M:%S'))
+        })
+        .on('finish.countdown', function(event) {
+            setHousingTimer()
+        });
+    } else {
+        $('#housing-card').removeClass('border-success');
+        $('#housing-card').addClass('border-secondary');
+        
+        $('#housing-txt').html('Next housing lottery opens in:')
+
+        $('#housing-card').countdown(nextHousingDeadline.toJSDate())
+        .on('update.countdown', function(event) {
+            $('#housing-timer').html(event.strftime('%-D days, %H:%M:%S'))
+        })
+        .on('finish.countdown', function(event) {
+            setHousingTimer()
+        });
+    }
+}
+setHousingTimer();
 
 //event stuff
 var fanfest = new TimeableEvent(
