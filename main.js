@@ -48,7 +48,7 @@ function getNextWeekDate() {
 
 function getNextHousingDeadline() {
     var housingBegin = DateTime.fromISO("2022-06-13T23:59:00.000", {zone: 'Asia/Tokyo'});
-    var timeSinceBegin = housingBegin.diffNow("days");
+    var timeSinceBegin = timeNowJP().diff(housingBegin, "days");
 
     var daysUntilNextLoop = (Math.ceil((timeSinceBegin.days / 9)) * 9); // Get the next multiple of 9 days.
     var nextLoopDate = housingBegin.plus({"days":daysUntilNextLoop});
@@ -61,8 +61,8 @@ function getNextHousingDeadline() {
 
 function isHousingOpen() {
     var housingBegin = DateTime.fromISO("2022-06-13T23:59:00.000", {zone: 'Asia/Tokyo'});
-
-    var timeSinceBegin = housingBegin.diffNow("days");
+    var timeSinceBegin = timeNowJP().diff(housingBegin, "days");
+    
     if ((timeSinceBegin.days % 9) < 5) // 5 days open, the last 4 closed.
         return true;
     else
